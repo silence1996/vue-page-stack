@@ -1506,7 +1506,8 @@ var es6_number_constructor = __webpack_require__("c5f6");
 // CONCATENATED MODULE: ./src/history.js
 
 var histoty = {
-  action: config.pushName
+  action: config.pushName,
+  dir: config.replaceName
 };
 /* harmony default export */ var src_history = (histoty);
 // CONCATENATED MODULE: ./src/components/VuePageStack.js
@@ -1620,6 +1621,7 @@ var mixin_eventRegister = function eventRegister(router) {
 
   router.push = function (location, onResolve, onReject) {
     src_history.action = config.pushName;
+    src_history.dir = config.forwardName;
 
     if (onResolve || onReject) {
       return routerPush(location, onResolve, onReject);
@@ -1632,11 +1634,19 @@ var mixin_eventRegister = function eventRegister(router) {
 
   router.go = function (n) {
     src_history.action = config.goName;
+
+    if (n >= 1) {
+      src_history.dir = config.forwardName;
+    } else {
+      src_history.dir = config.backName;
+    }
+
     routerGo(n);
   };
 
   router.replace = function (location, onResolve, onReject) {
     src_history.action = config.replaceName;
+    src_history.dir = config.replaceName;
 
     if (onResolve || onReject) {
       return routerReplace(location, onResolve, onReject);
@@ -1649,11 +1659,13 @@ var mixin_eventRegister = function eventRegister(router) {
 
   router.back = function () {
     src_history.action = config.backName;
+    src_history.dir = config.backName;
     routerBack();
   };
 
   router.forward = function () {
     src_history.action = config.forwardName;
+    src_history.dir = config.forwardName;
     routerForward();
   };
 };
@@ -1712,13 +1724,12 @@ VuePageStackPlugin.install = function (Vue, _ref) {
         replace: replace
       });
     } else {
-      var index = getIndexByKey(to.query[keyName]);
-
-      if (index === -1) {
-        to.params[keyName + '-dir'] = config.forwardName;
-      } else {
-        to.params[keyName + '-dir'] = config.backName;
-      }
+      // let index = getIndexByKey(to.query[keyName]);
+      to.params[keyName + '-dir'] = src_history.dir; // if (index === -1) {
+      //   to.params[keyName + '-dir'] = config.forwardName;
+      // } else {
+      //   to.params[keyName + '-dir'] = config.backName;
+      // }
 
       next({
         params: to.params

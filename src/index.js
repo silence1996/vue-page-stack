@@ -1,4 +1,4 @@
-import { VuePageStack, getIndexByKey, getStack } from './components/VuePageStack';
+import { VuePageStack, getStack } from './components/VuePageStack';
 import mixin from './mixin';
 import history from './history';
 import config from './config/config';
@@ -43,12 +43,13 @@ VuePageStackPlugin.install = function(Vue, { router, name = config.componentName
         replace: replace
       });
     } else {
-      let index = getIndexByKey(to.query[keyName]);
-      if (index === -1) {
-        to.params[keyName + '-dir'] = config.forwardName;
-      } else {
-        to.params[keyName + '-dir'] = config.backName;
-      }
+      // let index = getIndexByKey(to.query[keyName]);
+      to.params[keyName + '-dir'] = history.dir;
+      // if (index === -1) {
+      //   to.params[keyName + '-dir'] = config.forwardName;
+      // } else {
+      //   to.params[keyName + '-dir'] = config.backName;
+      // }
       next({ params: to.params });
     }
   }

@@ -10,6 +10,7 @@ let eventRegister = function(router) {
 
   router.push = (location, onResolve, onReject) => {
     history.action = config.pushName;
+    history.dir = config.forwardName;
     if (onResolve || onReject) {
       return routerPush(location, onResolve, onReject);
     }
@@ -18,11 +19,17 @@ let eventRegister = function(router) {
 
   router.go = n => {
     history.action = config.goName;
+    if (n >= 1) {
+      history.dir = config.forwardName;
+    } else {
+      history.dir = config.backName;
+    }
     routerGo(n);
   };
 
   router.replace = (location, onResolve, onReject) => {
     history.action = config.replaceName;
+    history.dir = config.replaceName;
     if (onResolve || onReject) {
       return routerReplace(location, onResolve, onReject);
     }
@@ -31,11 +38,13 @@ let eventRegister = function(router) {
 
   router.back = () => {
     history.action = config.backName;
+    history.dir = config.backName;
     routerBack();
   };
 
   router.forward = () => {
     history.action = config.forwardName;
+    history.dir = config.forwardName;
     routerForward();
   };
 };
